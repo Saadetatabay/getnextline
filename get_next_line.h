@@ -6,7 +6,7 @@
 /*   By: satabay <satabay@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 15:06:49 by satabay           #+#    #+#             */
-/*   Updated: 2025/07/11 11:13:41 by satabay          ###   ########.fr       */
+/*   Updated: 2025/07/16 12:17:52 by satabay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
 #ifndef BUFFER_SIZE 
-#define	BUFFER_SIZE 10
+#define BUFFER_SIZE 10
 #endif
 
 char	*get_next_line(int fd);
