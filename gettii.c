@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: satabay <satabay@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/16 11:38:40 by satabay           #+#    #+#             */
-/*   Updated: 2025/07/16 12:12:33 by satabay          ###   ########.fr       */
+/*   Created: 2025/07/16 11:33:09 by satabay           #+#    #+#             */
+/*   Updated: 2025/07/16 11:33:10 by satabay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,54 +25,17 @@ int	check_newline(char *buf)
 	return (0);
 }
 
-static char	*read_until_new_line(int fd, char *left)
-{
-	int		byte_red;
-	char	*buf;
-	char	*temp;
-
-	buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!buf)
-	{
-		free (left);	
-		return (NULL);
-	}
-	while (!check_newline(left))
-	{
-		byte_red = read(fd, buf, BUFFER_SIZE);
-		if (byte_red <= 0)
-			break ;
-		buf[byte_red] = '\0';
-		temp = ft_strjoin(left, buf);
-		free(left);
-		left = temp;
-	}
-	free(buf);
-	return (left);
-}
-
 char	*divide_left(char **leftp)
 {
 	char	*old_left;
 	char	*ret;
-	char	*newlinepos;
 	int		indis;
+	char	*new_pos;
 
-	if (!leftp || !*leftp)
-		return (NULL);
-	newlinepos = ft_strchr(*leftp, '\n');
-	if (!newlinepos)
-		return (NULL);
-	indis = newlinepos - *leftp;
+	new_pos = ft_strchr(*leftp, '\n');
+	indis = new_pos - *leftp;
 	ret = ft_substr(*leftp, 0, indis + 1);
-	if (!ret)
-		return (NULL);
 	old_left = ft_strdup(*leftp + indis + 1);
-	if (!old_left)
-	{
-		free(ret);
-		return (NULL);
-	}
 	free(*leftp);
 	*leftp = old_left;
 	return (ret);
@@ -80,14 +43,31 @@ char	*divide_left(char **leftp)
 
 char	*get_next_line(int fd)
 {
+	int			byte_red;
 	static char	*left;
+	char		*buf;
 	char		*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buf)
+		return NULL;
 	if (!left)
 		left = ft_strdup("");
-	left = read_until_new_line(fd, left);
+	buf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buf)
+		return NULL;	
+	while (!check_newline(buf))
+	{
+		byte_red = read(fd, buf, BUFFER_SIZE);
+		if (byte_red <= 0)
+			break;
+		buf[byte_red] = '\0';
+		temp = ft_strjoin(left, buf);
+		free(left);
+		left = temp;
+	}
 	if (!*left)
 	{
 		free(left);
